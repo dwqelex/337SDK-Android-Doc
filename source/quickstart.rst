@@ -1,29 +1,33 @@
 ===============				
 快速集成
 ===============
-That has a paragraph about a main subject and is set when the '='
-is at least the same length of the title itself.
 
-引入337lib工程
+引入依赖工程
 --------------
+
+	337SDK Android版本以library工程的形式提供，使用时必须引入核心Lib工程。
 
 	.. image:: _static/includelib.jpg
 
+	用户模块涉及到Facebook登录部分，所以还需要引入Facebook SDK。下载地址：https://developers.facebook.com/docs/android/
 
 添加权限  
 -------- 
 	
 需要声明的权限如下: ::
 	
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<!-- 基本权限 -->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+	<!-- 涉及GoogelPlay内购功能 -->
 	<uses-permission android:name="com.android.vending.BILLING" />
-	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	
+	<!-- 涉及手机短信付款功能 -->
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 	<uses-permission android:name="android.permission.SEND_SMS" />
  
@@ -31,60 +35,115 @@ is at least the same length of the title itself.
 --------------------------------
 需要添加的内容如下: ::
 
-		<activity 
-			android:name="com.web337.android.user.UserPage" android:theme="@style/mobile337user"/>
-		<activity 
-			android:name="com.web337.android.pay.PayCoreMobileActivity" 
-			android:configChanges="orientation|keyboardHidden|screenSize"/>
-		<activity 
-			android:name="com.web337.android.pay.PayFromPCActivity" 
-			android:configChanges="orientation|keyboardHidden|screenSize"/>
-		<activity 
-			android:name="com.web337.android.pay.PayShowPackagesActivity" 
-			android:configChanges="orientation|keyboardHidden|screenSize" />
-		<activity 
-			android:name="com.facebook.LoginActivity" android:theme="@android:style/Theme.Translucent"/>
-		<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="\ 220782057940018"/>
-		
-		<activity 
-			android:name="com.fortumo.android.FortumoActivity" 
-			android:theme="@android:style/Theme.Translucent.NoTitleBar">
-		</activity>
-		<activity 
-			android:name="com.web337.android.pay.fortumo.FortumoActivity" 
-			android:theme="@android:style/Theme.Translucent.NoTitleBar" 
-			android:configChanges="orientation|keyboardHidden|screenSize">
-		</activity>
-		<activity 
-			android:name="com.web337.android.widget.Web" 
-			android:configChanges="orientation|keyboardHidden|screenSize" 
-			android:launchMode="singleTask">
-		</activity>
-		<activity 
-			android:name="com.web337.android.ticket.TicketCoreActivity" 
-			android:configChanges="orientation|keyboardHidden|screenSize" >
-		</activity>
-		<receiver android:name="com.fortumo.android.BillingSMSReceiver">
-		  <intent-filter>
-		    <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
-		  </intent-filter>
-		</receiver>
-		
-		<uses-feature android:name="android.hardware.telephony" android:required="false"></uses-feature>
-		
-*screenSize添加时如果出现错误，请更改targetSdkVersion为13以上即可*	
+        <activity
+            android:name="com.web337.android.pay.PayCoreMobileActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
+        </activity>
+        <activity
+            android:name="com.web337.android.pay.PayFromPCActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
+        </activity>
+        <activity
+            android:name="com.web337.android.pay.PayShowPackagesActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
+        </activity>
+        <activity
+            android:name="com.web337.android.ticket.TicketCoreActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <activity
+            android:name="com.fortumo.android.FortumoActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.web337.android.pay.fortumo.FortumoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.web337.android.widget.Web"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask" >
+        </activity>
+        <activity
+            android:name="com.web337.android.user.UserPage"
+            android:theme="@style/mobile337user" >
+        </activity>
+        <activity
+            android:name="com.web337.android.user.GoogleAcountLogin"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
+        </activity>
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:theme="@android:style/Theme.Translucent" />
+        <receiver
+            android:name="com.web337.android.Tracker"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.fortumo.android.BillingSMSReceiver" >
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" >
+                </action>
+            </intent-filter>
+        </receiver>
 
-添加广告SDK配置
+        <service android:name="com.fortumo.android.FortumoService" />
+        <service android:name="com.fortumo.android.StatusUpdateService" />
+        <uses-feature android:name="android.hardware.telephony" android:required="false"></uses-feature>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="\ 220782057940018" />
+		
+*screenSize添加时如果出现错误，请更改targetSdkVersion为13以上即可*
+
+*com.facebook.sdk.ApplicationId如果不使用默认的220782057940018，可以替换为游戏自己的ID，需要事先将应用secret配置在337的后台*	
+
+*如果需要添加的INSTALL_REFERRER的receiver不止一个，可以单独设立一个统一的入口，然后转发给com.web337.android.Tracker*
+
+添加第三方广告推广平台SDK
 ---------------
 
-详见广告SDK接入文档
+具体配置见第三方广告SDK条目
 
-初始化所有第三方SDK
--------------------
-	 
-直接调用一下方法:  ::
+配置完毕，需要在游戏最开始调用以下方法::
 	 
 		com.web337.android.sdks.SdkCore.initAll(this);
+
+重载关键方法
+----------------
+
+在主Activity的代码中，重载以下方法::
+
+		@Override
+		protected void onDestroy() {
+			FuncCore.onDestroy(this);
+			super.onDestroy();
+		}
+
+		@Override
+		protected void onStart() {
+			FuncCore.onStart(this);
+			super.onStart();
+		}
+
+		@Override
+		protected void onStop() {
+			FuncCore.onStop(this);
+			super.onStop();
+		}
+
+		@Override
+		public void onBackPressed() {
+			if (FuncCore.onBackPressed(this)) {
+				return;
+			} else {
+				super.onBackPressed();
+			}
+		}
 		
 接入用户系统
 ------------
@@ -98,13 +157,7 @@ is at least the same length of the title itself.
 
 			@Override
 			public void onLoginSuccess(User user, boolean isregister) {
-				/*
-				登录成功后设置角色id、角色名称、服id、服名称
-				*/
-				com.web337.android.id.Zone.getInstance().setRole_id("roleid00001");
-				com.web337.android.id.Zone.getInstance().setRole_name("wangxiaoming");
-				com.web337.android.id.Zone.getInstance().setServer_id("1");
-				com.web337.android.id.Zone.getInstance().setServer_name("ServerName");
+				
 				//成功后可以显示一个欢迎提示，玩家可以在此切换账号
 				UserCore.showWelcome(YourActivity.this);//【可选功能】
 				if(isregister){
@@ -123,7 +176,18 @@ is at least the same length of the title itself.
 
 **调用该方法后只需要关心callback中的两个回调方法即可，若当前无登录用户，则会弹出登录或注册页面，用户登录或注册完成后，会回调。若已经有登录的用户，则直接回调**
 
-发送行云统计
+设置角色和服信息
+------------
+
+	在获取到角色的信息和所在服之后，设置一下相应的信息： ::
+
+		com.web337.android.id.Zone.getInstance().clear();
+		com.web337.android.id.Zone.getInstance().setRole_id("roleid00001");
+		com.web337.android.id.Zone.getInstance().setRole_name("wangxiaoming");
+		com.web337.android.id.Zone.getInstance().setServer_id("1");
+		com.web337.android.id.Zone.getInstance().setServer_name("ServerName");
+
+加入行云统计
 ------------
 
 用户登录完成后，设置完角色信息即可调用: ::
@@ -131,14 +195,22 @@ is at least the same length of the title itself.
 	com.web337.android.sdks.XA.send(Context c);
 	
 Context传递当前Activity即可
+
+打开浮动窗口
+--------------
+
+进入游戏主面板后，打开337的浮动窗口: ::
+
+		FuncCore.showFloatWindow(activity);
 			
 支付初始化
 ----------
 
 示例代码如下: ::
-	
+
+		//支付Id请联系运营申请
 		String appid = "xxx@android_tw_1";
-		PayCore.init(this, appid, new PayCallback(){
+		PayCore.init(context, appid, new PayCallback(){
 			@Override
 			public void onCancel() {
 				alert("取消支付");
@@ -162,6 +234,7 @@ Context传递当前Activity即可
 				if(msg.isSuccess()){
 					alert("初始化完成。");
 				}else{
+					//初始化出错后，不能调用发起支付的方法
 					alert("初始化出错。"+msg.getMsg());
 				}
 		}});
@@ -173,16 +246,12 @@ Context传递当前Activity即可
 
 需要如下三个步骤: ::
 
-		//若未设置过commonUid,则需要设置uid才能去支付
-		//PayCore.setUid("elex337_12345");
-				
-		//设置角色id，回调时会回调此id，若未设置，则角色id为uid
-		PayCore.setRoleId("abcde12345");
-				
 		//展示套餐，此处套餐均在支付平台后台配置
 		PayCore.show();
 
-***至此337 SDK接入完成，更多的使用方法可以参考各个模块的文档***
+*show()方法支持传递一个自定义字符串，该值最终会作为custom_data参数回调给游戏服务器*
+
+**至此337 SDK接入完成，更多的使用方法可以参考各个模块的文档**
 
 
  

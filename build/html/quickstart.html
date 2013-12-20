@@ -49,15 +49,17 @@
   <h3><a href="index.html">內容目录</a></h3>
   <ul>
 <li><a class="reference internal" href="#">快速集成</a><ul>
-<li><a class="reference internal" href="#lib">引入337lib工程</a></li>
-<li><a class="reference internal" href="#id2">添加权限</a></li>
+<li><a class="reference internal" href="#id2">引入依赖工程</a></li>
+<li><a class="reference internal" href="#id3">添加权限</a></li>
 <li><a class="reference internal" href="#activitymetadata">添加Activity、MetaData和其他内容</a></li>
-<li><a class="reference internal" href="#sdk">添加广告SDK配置</a></li>
-<li><a class="reference internal" href="#id3">初始化所有第三方SDK</a></li>
-<li><a class="reference internal" href="#id4">接入用户系统</a></li>
-<li><a class="reference internal" href="#id5">发送行云统计</a></li>
-<li><a class="reference internal" href="#id6">支付初始化</a></li>
-<li><a class="reference internal" href="#id7">展示套餐</a></li>
+<li><a class="reference internal" href="#sdk">添加第三方广告推广平台SDK</a></li>
+<li><a class="reference internal" href="#id4">重载关键方法</a></li>
+<li><a class="reference internal" href="#id5">接入用户系统</a></li>
+<li><a class="reference internal" href="#id6">设置角色和服信息</a></li>
+<li><a class="reference internal" href="#id7">加入行云统计</a></li>
+<li><a class="reference internal" href="#id8">打开浮动窗口</a></li>
+<li><a class="reference internal" href="#id9">支付初始化</a></li>
+<li><a class="reference internal" href="#id10">展示套餐</a></li>
 </ul>
 </li>
 </ul>
@@ -96,26 +98,29 @@
             
   <div class="section" id="id1">
 <h1>快速集成<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h1>
-<p>That has a paragraph about a main subject and is set when the &#8216;=&#8217;
-is at least the same length of the title itself.</p>
-<div class="section" id="lib">
-<h2>引入337lib工程<a class="headerlink" href="#lib" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id2">
+<h2>引入依赖工程<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
 <blockquote>
-<div><img alt="_static/includelib.jpg" src="_static/includelib.jpg" />
+<div><p>337SDK Android版本以library工程的形式提供，使用时必须引入核心Lib工程。</p>
+<img alt="_images/includelib.jpg" src="_images/includelib.jpg" />
+<p>用户模块涉及到Facebook登录部分，所以还需要引入Facebook SDK。下载地址：<a class="reference external" href="https://developers.facebook.com/docs/android/">https://developers.facebook.com/docs/android/</a></p>
 </div></blockquote>
 </div>
-<div class="section" id="id2">
-<h2>添加权限<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id3">
+<h2>添加权限<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
 <p>需要声明的权限如下:</p>
-<div class="highlight-python"><pre>&lt;uses-permission android:name="android.permission.INTERNET"/&gt;
-&lt;uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/&gt;
-&lt;uses-permission android:name="android.permission.READ_PHONE_STATE"/&gt;
-&lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/&gt;
-&lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/&gt;
+<div class="highlight-python"><pre>&lt;!-- 基本权限 --&gt;
+&lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+&lt;uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /&gt;
+&lt;uses-permission android:name="android.permission.READ_PHONE_STATE" /&gt;
+&lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /&gt;
+&lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /&gt;
+&lt;uses-permission android:name="android.permission.GET_ACCOUNTS" /&gt;
+
+&lt;!-- 涉及GoogelPlay内购功能 --&gt;
 &lt;uses-permission android:name="com.android.vending.BILLING" /&gt;
-&lt;uses-permission android:name="android.permission.GET_ACCOUNTS"/&gt;
-&lt;uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /&gt;
-&lt;uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /&gt;
+
+&lt;!-- 涉及手机短信付款功能 --&gt;
 &lt;uses-permission android:name="android.permission.RECEIVE_SMS" /&gt;
 &lt;uses-permission android:name="android.permission.SEND_SMS" /&gt;</pre>
 </div>
@@ -124,61 +129,113 @@ is at least the same length of the title itself.</p>
 <h2>添加Activity、MetaData和其他内容<a class="headerlink" href="#activitymetadata" title="永久链接至标题">¶</a></h2>
 <p>需要添加的内容如下:</p>
 <div class="highlight-python"><pre>&lt;activity
-        android:name="com.web337.android.user.UserPage" android:theme="@style/mobile337user"/&gt;
-&lt;activity
-        android:name="com.web337.android.pay.PayCoreMobileActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"/&gt;
-&lt;activity
-        android:name="com.web337.android.pay.PayFromPCActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"/&gt;
-&lt;activity
-        android:name="com.web337.android.pay.PayShowPackagesActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize" /&gt;
-&lt;activity
-        android:name="com.facebook.LoginActivity" android:theme="@android:style/Theme.Translucent"/&gt;
-&lt;meta-data android:name="com.facebook.sdk.ApplicationId" android:value="\ 220782057940018"/&gt;
-
-&lt;activity
-        android:name="com.fortumo.android.FortumoActivity"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar"&gt;
+    android:name="com.web337.android.pay.PayCoreMobileActivity"
+    android:configChanges="orientation|keyboardHidden|screenSize" &gt;
 &lt;/activity&gt;
 &lt;activity
-        android:name="com.web337.android.pay.fortumo.FortumoActivity"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar"
-        android:configChanges="orientation|keyboardHidden|screenSize"&gt;
+    android:name="com.web337.android.pay.PayFromPCActivity"
+    android:configChanges="orientation|keyboardHidden|screenSize" &gt;
 &lt;/activity&gt;
 &lt;activity
-        android:name="com.web337.android.widget.Web"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:launchMode="singleTask"&gt;
+    android:name="com.web337.android.pay.PayShowPackagesActivity"
+    android:configChanges="orientation|keyboardHidden|screenSize" &gt;
 &lt;/activity&gt;
 &lt;activity
-        android:name="com.web337.android.ticket.TicketCoreActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize" &gt;
+    android:name="com.web337.android.ticket.TicketCoreActivity"
+    android:configChanges="orientation|keyboardHidden|screenSize"
+    android:windowSoftInputMode="adjustUnspecified|stateHidden" &gt;
 &lt;/activity&gt;
-&lt;receiver android:name="com.fortumo.android.BillingSMSReceiver"&gt;
-  &lt;intent-filter&gt;
-    &lt;action android:name="android.provider.Telephony.SMS_RECEIVED"&gt;&lt;/action&gt;
-  &lt;/intent-filter&gt;
+&lt;activity
+    android:name="com.fortumo.android.FortumoActivity"
+    android:theme="@android:style/Theme.Translucent.NoTitleBar" &gt;
+&lt;/activity&gt;
+&lt;activity
+    android:name="com.web337.android.pay.fortumo.FortumoActivity"
+    android:configChanges="orientation|keyboardHidden|screenSize"
+    android:theme="@android:style/Theme.Translucent.NoTitleBar" &gt;
+&lt;/activity&gt;
+&lt;activity
+    android:name="com.web337.android.widget.Web"
+    android:configChanges="orientation|keyboardHidden|screenSize"
+    android:launchMode="singleTask" &gt;
+&lt;/activity&gt;
+&lt;activity
+    android:name="com.web337.android.user.UserPage"
+    android:theme="@style/mobile337user" &gt;
+&lt;/activity&gt;
+&lt;activity
+    android:name="com.web337.android.user.GoogleAcountLogin"
+    android:configChanges="orientation|keyboardHidden|screenSize" &gt;
+&lt;/activity&gt;
+&lt;activity
+    android:name="com.facebook.LoginActivity"
+    android:theme="@android:style/Theme.Translucent" /&gt;
+&lt;receiver
+    android:name="com.web337.android.Tracker"
+    android:exported="true" &gt;
+    &lt;intent-filter&gt;
+        &lt;action android:name="com.android.vending.INSTALL_REFERRER" /&gt;
+    &lt;/intent-filter&gt;
+&lt;/receiver&gt;
+&lt;receiver android:name="com.fortumo.android.BillingSMSReceiver" &gt;
+    &lt;intent-filter&gt;
+        &lt;action android:name="android.provider.Telephony.SMS_RECEIVED" &gt;
+        &lt;/action&gt;
+    &lt;/intent-filter&gt;
 &lt;/receiver&gt;
 
-&lt;uses-feature android:name="android.hardware.telephony" android:required="false"&gt;&lt;/uses-feature&gt;</pre>
+&lt;service android:name="com.fortumo.android.FortumoService" /&gt;
+&lt;service android:name="com.fortumo.android.StatusUpdateService" /&gt;
+&lt;uses-feature android:name="android.hardware.telephony" android:required="false"&gt;&lt;/uses-feature&gt;
+&lt;meta-data
+    android:name="com.facebook.sdk.ApplicationId"
+    android:value="\ 220782057940018" /&gt;</pre>
 </div>
 <p><em>screenSize添加时如果出现错误，请更改targetSdkVersion为13以上即可</em></p>
+<p><em>com.facebook.sdk.ApplicationId如果不使用默认的220782057940018，可以替换为游戏自己的ID，需要事先将应用secret配置在337的后台</em></p>
+<p><em>如果需要添加的INSTALL_REFERRER的receiver不止一个，可以单独设立一个统一的入口，然后转发给com.web337.android.Tracker</em></p>
 </div>
 <div class="section" id="sdk">
-<h2>添加广告SDK配置<a class="headerlink" href="#sdk" title="永久链接至标题">¶</a></h2>
-<p>详见广告SDK接入文档</p>
-</div>
-<div class="section" id="id3">
-<h2>初始化所有第三方SDK<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h2>
-<p>直接调用一下方法:</p>
+<h2>添加第三方广告推广平台SDK<a class="headerlink" href="#sdk" title="永久链接至标题">¶</a></h2>
+<p>具体配置见第三方广告SDK条目</p>
+<p>配置完毕，需要在游戏最开始调用以下方法:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">com</span><span class="o">.</span><span class="n">web337</span><span class="o">.</span><span class="n">android</span><span class="o">.</span><span class="n">sdks</span><span class="o">.</span><span class="n">SdkCore</span><span class="o">.</span><span class="n">initAll</span><span class="p">(</span><span class="n">this</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="id4">
-<h2>接入用户系统<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<h2>重载关键方法<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>在主Activity的代码中，重载以下方法:</p>
+<div class="highlight-python"><pre>@Override
+protected void onDestroy() {
+        FuncCore.onDestroy(this);
+        super.onDestroy();
+}
+
+@Override
+protected void onStart() {
+        FuncCore.onStart(this);
+        super.onStart();
+}
+
+@Override
+protected void onStop() {
+        FuncCore.onStop(this);
+        super.onStop();
+}
+
+@Override
+public void onBackPressed() {
+        if (FuncCore.onBackPressed(this)) {
+                return;
+        } else {
+                super.onBackPressed();
+        }
+}</pre>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>接入用户系统<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
 <ul>
 <li><p class="first">实例化一个回调对象：</p>
 <div class="highlight-python"><pre>final UserLoginCallback callback = new UserLoginCallback(){
@@ -189,13 +246,7 @@ is at least the same length of the title itself.</p>
 
         @Override
         public void onLoginSuccess(User user, boolean isregister) {
-                /*
-                登录成功后设置角色id、角色名称、服id、服名称
-                */
-                com.web337.android.id.Zone.getInstance().setRole_id("roleid00001");
-                com.web337.android.id.Zone.getInstance().setRole_name("wangxiaoming");
-                com.web337.android.id.Zone.getInstance().setServer_id("1");
-                com.web337.android.id.Zone.getInstance().setServer_name("ServerName");
+
                 //成功后可以显示一个欢迎提示，玩家可以在此切换账号
                 UserCore.showWelcome(YourActivity.this);//【可选功能】
                 if(isregister){
@@ -215,18 +266,39 @@ is at least the same length of the title itself.</p>
 <p><em>可以在进入游戏主页面后直接调用，Context传递当前的activity即可，UserLoginCallback传递上一步创建的callback对象</em></p>
 <p><strong>调用该方法后只需要关心callback中的两个回调方法即可，若当前无登录用户，则会弹出登录或注册页面，用户登录或注册完成后，会回调。若已经有登录的用户，则直接回调</strong></p>
 </div>
-<div class="section" id="id5">
-<h2>发送行云统计<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id6">
+<h2>设置角色和服信息<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<blockquote>
+<div><p>在获取到角色的信息和所在服之后，设置一下相应的信息：</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">com</span><span class="o">.</span><span class="n">web337</span><span class="o">.</span><span class="n">android</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">Zone</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="n">com</span><span class="o">.</span><span class="n">web337</span><span class="o">.</span><span class="n">android</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">Zone</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">setRole_id</span><span class="p">(</span><span class="s">&quot;roleid00001&quot;</span><span class="p">);</span>
+<span class="n">com</span><span class="o">.</span><span class="n">web337</span><span class="o">.</span><span class="n">android</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">Zone</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">setRole_name</span><span class="p">(</span><span class="s">&quot;wangxiaoming&quot;</span><span class="p">);</span>
+<span class="n">com</span><span class="o">.</span><span class="n">web337</span><span class="o">.</span><span class="n">android</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">Zone</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">setServer_id</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">);</span>
+<span class="n">com</span><span class="o">.</span><span class="n">web337</span><span class="o">.</span><span class="n">android</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">Zone</span><span class="o">.</span><span class="n">getInstance</span><span class="p">()</span><span class="o">.</span><span class="n">setServer_name</span><span class="p">(</span><span class="s">&quot;ServerName&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="id7">
+<h2>加入行云统计<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
 <p>用户登录完成后，设置完角色信息即可调用:</p>
 <div class="highlight-python"><pre>com.web337.android.sdks.XA.send(Context c);</pre>
 </div>
 <p>Context传递当前Activity即可</p>
 </div>
-<div class="section" id="id6">
-<h2>支付初始化<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id8">
+<h2>打开浮动窗口<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<p>进入游戏主面板后，打开337的浮动窗口:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">FuncCore</span><span class="o">.</span><span class="n">showFloatWindow</span><span class="p">(</span><span class="n">activity</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id9">
+<h2>支付初始化<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
 <p>示例代码如下:</p>
-<div class="highlight-python"><pre>String appid = "xxx@android_tw_1";
-PayCore.init(this, appid, new PayCallback(){
+<div class="highlight-python"><pre>//支付Id请联系运营申请
+String appid = "xxx@android_tw_1";
+PayCore.init(context, appid, new PayCallback(){
         @Override
         public void onCancel() {
                 alert("取消支付");
@@ -250,25 +322,21 @@ PayCore.init(this, appid, new PayCallback(){
                 if(msg.isSuccess()){
                         alert("初始化完成。");
                 }else{
+                        //初始化出错后，不能调用发起支付的方法
                         alert("初始化出错。"+msg.getMsg());
                 }
 }});</pre>
 </div>
 <p><strong>初始化涉及网络操作，不建议将此步骤放在用户点击商城的时候</strong></p>
 </div>
-<div class="section" id="id7">
-<h2>展示套餐<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<div class="section" id="id10">
+<h2>展示套餐<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h2>
 <p>需要如下三个步骤:</p>
-<div class="highlight-python"><pre>//若未设置过commonUid,则需要设置uid才能去支付
-//PayCore.setUid("elex337_12345");
-
-//设置角色id，回调时会回调此id，若未设置，则角色id为uid
-PayCore.setRoleId("abcde12345");
-
-//展示套餐，此处套餐均在支付平台后台配置
+<div class="highlight-python"><pre>//展示套餐，此处套餐均在支付平台后台配置
 PayCore.show();</pre>
 </div>
-<p><strong>*至此337 SDK接入完成，更多的使用方法可以参考各个模块的文档*</strong></p>
+<p><em>show()方法支持传递一个自定义字符串，该值最终会作为custom_data参数回调给游戏服务器</em></p>
+<p><strong>至此337 SDK接入完成，更多的使用方法可以参考各个模块的文档</strong></p>
 </div>
 </div>
 
