@@ -1,6 +1,3 @@
-============
-移动支付集成
-============
 
 玩家支付流程
 ------------
@@ -47,9 +44,6 @@
 	android:name="com.web337.android.pay.PayShowPackagesActivity" 
 	android:configChanges="orientation|keyboardHidden|screenSize" />
 
-	<service android:name="com.fortumo.android.FortumoService" />
-	<service android:name="com.fortumo.android.StatusUpdateService" />
-
 	<activity 
 	android:name="com.fortumo.android.FortumoActivity" 
 	android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -58,6 +52,16 @@
 	android:name="com.web337.android.pay.fortumo.FortumoActivity" 
 	android:theme="@android:style/Theme.Translucent.NoTitleBar" 
 	android:configChanges="orientation|keyboardHidden|screenSize" />
+	
+	<receiver android:name="com.fortumo.android.BillingSMSReceiver" >
+		<intent-filter>
+			<action android:name="android.provider.Telephony.SMS_RECEIVED" >
+			</action>
+		</intent-filter>
+	</receiver>
+
+	<service android:name="com.fortumo.android.FortumoService" />
+	<service android:name="com.fortumo.android.StatusUpdateService" />
 	
 初始化PayCore
 -------------
@@ -85,7 +89,7 @@
 
 设置uid有以下几种方法：
 
-#. 使用Settings.setCommonUid,该方法需要在支付初始化之前设置，设置之后，支付模块在初始化时会使用该方法设置的uid。
+#. 使用Settings.setCommonUid,该方法需要在支付初始化之前设置，设置之后，支付模块在初始化时会使用该方法设置的uid。（在引入IdZone之后这个方法已经过时，只用于兼容旧版代码和单独接入支付时使用）
  
 #. 使用337用户id，若未使用Commonuid，若在支付初始化之前已经登录了337uid，则支付模块在初始化时会使用用户的337uid。
  
@@ -97,6 +101,7 @@ IdZone设置： 2.0.4版本后增加了IdZone的概念，使用IdZone的前提�
 
 设置方法如下: ::
 
+	com.web337.android.id.Zone.getInstance().clear();
 	com.web337.android.id.Zone.getInstance().setRole_id("12345");
 	com.web337.android.id.Zone.getInstance().setRole_name("王小明");
 	com.web337.android.id.Zone.getInstance().setServer_id("1");
@@ -166,6 +171,10 @@ customData，自定义参数，应用可以随意传递任何数据，长度为2
 	PayCore.show();
 	
 SDK会直接展示在后台预设好的物品包金额，从而方便用户进行快速支付。
+
+可以使用以下方法单独调用手机渠道支付（fortumo、mozca等）： ::
+
+	PayCore.mobileShow();
 		
 *两种支付模式是并列的，不能同时使用。代理模式一般需要将需要购买的物品金额等信息配置在应用内部，然后作为参数进行支付，而托管模式全部参数都在服务器端配置，可以灵活的调整物品包的金额种类等*
 
