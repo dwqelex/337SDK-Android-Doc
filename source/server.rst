@@ -42,9 +42,6 @@
 
 *安全验证机制可以保证应用服务端收到的回调确实是由支付平台发起而非第三方伪造。*
 
-验证交易信息
-------------
-
 **IP验证**
 
 需要对请求作IP验证，只有IP地址：174.37.255.60，173.192.195.130发送过来的请求才能通过
@@ -66,7 +63,6 @@
 **样例代码**
 
 注意：php版本的代码需要 `下载证书文件`_  ，请将这个文件放到和回调php文件同样的目录。
-如果想要了解更多有关https的资料，请参阅文档：`HTTPS学习笔记`_
  
 .. _下载证书文件: http://elexpublish.googlecode.com/files/verisign_ca.crt
 .. _HTTPS学习笔记: http://code.google.com/p/elexpublish/wiki/https_notes
