@@ -41,7 +41,7 @@
 	
  **3-6参数一般使用this来传递当前activity即可**
  
-集成Tapjop
+集成Tapjoy
 ----------
 
 添加Activitys声明: ::
@@ -72,9 +72,9 @@
 
 添加meta-data声明: ::
 
-	<meta-data android:value="请填写您获得的Tapjop的AppID" 
+	<meta-data android:value="请填写您获得的Tapjoy的AppID" 
 	android:name="337_TAPJOY_APPID"></meta-data>
-	<meta-data android:value="请填写您获得的Tapjop的Key" 
+	<meta-data android:value="请填写您获得的Tapjoy的Key" 
 	android:name="337_TAPJOY_APPKEY"></meta-data>
 	
 引入 **tapjoyconnectlibrary.jar** 文件
